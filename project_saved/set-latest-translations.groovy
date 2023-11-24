@@ -7,7 +7,8 @@
  * @edit      2023.11.19: Manuel added condition to run only for certain projects on load
  * @edit      2023.11.21: Manuel added check and warning if dummy file is missing
  * @edit      2023.11.22: Manuel removed reload (call to reloadProjectOnetime)
- * @edit      2023.11.22: Manuel added condition to discard TM matches if they are alternative
+ * @edit      2023.11.22: Manuel added condition to discard TM matches if they are alternative in comparison
+ * @edit      2023.11.23: Manuel added condition to discard TM matches if they are alternative in lookup (previously)
  * @version   0.0.6
 */
 import org.omegat.core.data.PrepareTMXEntry
@@ -24,7 +25,6 @@ dummyFileException = null
 
 // path to the folder inside the TM folder
 path_to_tmx_dir = "auto" + File.separator + "prev"
-
 
 def gui() {
 
@@ -98,7 +98,7 @@ def gui() {
                     // and it is not optimized, we should use a cache as in ImportFromAutoTMX
                     def inProject = null
                     project.allEntries.each { pe -> 
-                        if (pe.srcText.equals(entry.source)) inProject = pe;
+                        if ((pe.srcText.equals(entry.source)) && (!isAlternative)) inProject = pe;
                     }
                     // Now search is done, if we found something we use it
                     if ((inProject != null) && (entry.source.equals(inProject.srcText))) {
@@ -123,7 +123,6 @@ def gui() {
                 }
             }
         }
-
 
         editor.gotoEntry(curEntry)
         if ( dummyFileException != null ) { FlagDummyFileMissing(dummyFileException) }
@@ -173,11 +172,6 @@ def FlagDummyFileMissing(e) {
 return
 
 /*
-Questions: 
-- why 2 x done (91 ms elapsed)
-- neverending spinning clock?
-
 @TODO: 
 - consider only tmx files that have the same name as the batch
-
 */ 
