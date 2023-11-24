@@ -7,9 +7,11 @@
  * @edit      2023.11.19: Manuel added condition to run only for certain projects on load
  * @edit      2023.11.21: Manuel added check and warning if dummy file is missing
  * @edit      2023.11.22: Manuel removed reload (call to reloadProjectOnetime)
- * @version   0.0.5
+ * @edit      2023.11.22: Manuel added condition to discard TM matches if they are alternative
+ * @version   0.0.6
 */
-
+import org.omegat.core.data.PrepareTMXEntry
+import org.omegat.core.data.TMXEntry
 import static javax.swing.JOptionPane.*
 import static org.omegat.util.Platform.*
 import static org.omegat.core.events.IProjectEventListener.PROJECT_CHANGE_TYPE.*
@@ -40,7 +42,7 @@ def gui() {
             final def msg   = "No project opened or not a team project."
             console.println("== ${title} ==")
             console.println(msg)
-            showMessageDialog(null, msg, title, INFORMATION_MESSAGE)
+            // showMessageDialog(null, msg, title, INFORMATION_MESSAGE)
             continueScript = false
             return
         }
@@ -89,6 +91,8 @@ def gui() {
             if (name.startsWith(path_to_tmx_dir)) {
                 // console.println("Importing from " + name)
                 tmx.entries.each { entry ->
+                    // see if the entry is alternative (= if it has id)
+                    def isAlternative = entry.otherProperties.findAll  {  it -> it.type == 'id' } // or prev/next
                     // Search which entry in the project corresponds to the one in the tmx
                     // Note: to be improved, for the moment it works only with default entries
                     // and it is not optimized, we should use a cache as in ImportFromAutoTMX
@@ -99,7 +103,7 @@ def gui() {
                     // Now search is done, if we found something we use it
                     if ((inProject != null) && (entry.source.equals(inProject.srcText))) {
                         def inProjectEntry = project.getTranslationInfo(inProject)
-                        if ((inProjectEntry != null) && (entry.source.equals(inProjectEntry.source))) {
+                        if ((inProjectEntry != null) && (!isAlternative) && (entry.source.equals(inProjectEntry.source))) {
                             long inProjectDate = inProjectEntry.creationDate
                             if (inProjectEntry.changeDate > inProjectEntry.creationDate) {
                                 inProjectDate = inProjectEntry.changeDate
