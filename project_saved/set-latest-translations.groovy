@@ -7,9 +7,9 @@
  * @edit      2023.11.19: Manuel added condition to run only for certain projects on load
  * @edit      2023.11.21: Manuel added check and warning if dummy file is missing
  * @edit      2023.11.22: Manuel removed reload (call to reloadProjectOnetime)
- * @edit      2023.11.22: Manuel added condition to discard TM matches if they are alternative in comparison
- * @edit      2023.11.23: Manuel added condition to discard TM matches if they are alternative in lookup (previously)
- * @version   0.0.6
+ * @edit      2023.11.22: Manuel added condition to discard translations in project if they are alternative
+ * @edit      2023.11.23: Thomas added condition to discard TMX entries if they are alternative
+ * @version   0.0.8
 */
 import org.omegat.core.data.PrepareTMXEntry
 import org.omegat.core.data.TMXEntry
@@ -82,6 +82,8 @@ def gui() {
         }
 
         
+
+
         if (!continueScript) {
             return
         }
@@ -92,18 +94,19 @@ def gui() {
                 // console.println("Importing from " + name)
                 tmx.entries.each { entry ->
                     // see if the entry is alternative (= if it has id)
-                    def isAlternative = entry.otherProperties.findAll  {  it -> it.type == 'id' } // or prev/next
+                    def isTmxEntryAlternative = entry.otherProperties.findAll  {  it -> it.type == 'id' } // or prev/next
                     // Search which entry in the project corresponds to the one in the tmx
                     // Note: to be improved, for the moment it works only with default entries
                     // and it is not optimized, we should use a cache as in ImportFromAutoTMX
                     def inProject = null
                     project.allEntries.each { pe -> 
-                        if ((pe.srcText.equals(entry.source)) && (!isAlternative)) inProject = pe;
+                        def translation = project.getTranslationInfo(pe)
+                        if ((pe.srcText.equals(entry.source))  && (!isTmxEntryAlternative) && (translation == null || translation.defaultTranslation)) inProject = pe; 
                     }
                     // Now search is done, if we found something we use it
                     if ((inProject != null) && (entry.source.equals(inProject.srcText))) {
                         def inProjectEntry = project.getTranslationInfo(inProject)
-                        if ((inProjectEntry != null) && (!isAlternative) && (entry.source.equals(inProjectEntry.source))) {
+                        if ((inProjectEntry != null) && (!isTmxEntryAlternative) && (entry.source.equals(inProjectEntry.source))) {
                             long inProjectDate = inProjectEntry.creationDate
                             if (inProjectEntry.changeDate > inProjectEntry.creationDate) {
                                 inProjectDate = inProjectEntry.changeDate
