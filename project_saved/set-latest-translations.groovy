@@ -182,6 +182,9 @@ def gui() {
 
 	console.println("These are the entries that need to be registered to project save, together with metadata")
 	// project_save.save()
+	// Kos suggests: For each of your objects in latest_internal_entries create a new PrepareTMXEntry(), and its 
+	// properties from the collected object, and do project.setTranslation()
+	// like: https://github.com/kosivantsov/omegat_scripts/blob/4805686ced99f7eca7046ebefe98c6511e5ac215/aux_scripts/remove_extra_tags.groovy#L116C1-L132C10
 
 	console.println("Probably some fine -tuning is necessary not to mix default and alternative translations")
 
