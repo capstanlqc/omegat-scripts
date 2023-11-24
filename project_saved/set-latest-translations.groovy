@@ -1,11 +1,13 @@
 /* :name = Set Latest Translations v3 :description=
  *
- * @author    Manuel Souto Pico (original idea and first attemp, final tweaks: run only for certain projects on load)
- * @author    Thomas Cordonnier (adaptation to use OmegaT internals)
- * @author    Kos Ivantsov (added trick to avoid merge dialog)
- * @creation  2023.11.06
- * @edit      2023.11.17
- * @version   0.0.3
+ * @author    Manuel Souto Pico, Thomas Cordonnier, Kos Ivantsov
+ * @creation  2023.11.06: Manuel wrote first draft
+ * @edit      2023.11.07: Thomas added OmegaT internals
+ * @edit      2023.11.17: Kos added trick to avoid merge dialog
+ * @edit      2023.11.19: Manuel added condition to run only for certain projects on load
+ * @edit      2023.11.21: Manuel added check and warning if dummy file is missing
+ * @edit      2023.11.22: Manuel removed reload (call to reloadProjectOnetime)
+ * @version   0.0.5
 */
 
 import static javax.swing.JOptionPane.*
@@ -16,6 +18,7 @@ import groovy.util.*
 //Since gui() is executed anyway, continueScript will change to false when needed
 continueScript = true
 changesMade = false
+dummyFileException = null
 
 // path to the folder inside the TM folder
 path_to_tmx_dir = "auto" + File.separator + "prev"
@@ -44,7 +47,7 @@ def gui() {
 
         // abort if the team project is not a pisa project
         projName = props.projectName
-        if (!projName.contains("pisa_2025ft_translation")) {
+        if (!projName.startsWith("pisa_2025")) {
             final def title = "Set Latest Translations"
             final def msg   = "This is not a PISA25 FT project."
             console.println("== ${title} ==")
@@ -59,21 +62,23 @@ def gui() {
         dummyFileName = "zz.txt"
         sourceDirPath = props.getSourceRoot()
         sourceDir = new File(sourceDirPath)
-        def txtFiles = new FileNameFinder().getFileNames(sourceDirPath, '**/zz.txt' /* includes */, '**/*.xml **/*.html' /* excludes */)
-        dummyFile = new File(txtFiles[0]) // .absolutePath
-
-        if (! dummyFile.exists()) {
-            console.println("Dummy file doesn't exist")
-            //continueScript = false
-            //return
-        } else {
-            projectFiles = project.getProjectFiles()
-            dummyFileIndex = projectFiles.findIndexOf { 
-                it.filePath == sourceDir.toPath().relativize( dummyFile.toPath() ).toString() // relative path to dummy file
-            }            
-            dummyEntry = projectFiles[dummyFileIndex].entries[0]
-            editor.gotoEntry(dummyEntry.entryNum())
+        def txtFiles = new FileNameFinder().getFileNames(sourceDirPath, '**/' + dummyFileName /* includes */, '**/*.xml **/*.html' /* excludes */)
+        try {
+            dummyFile = new File(txtFiles[0]) // .absolutePath
+            assert dummyFile.getClass() == java.io.File
+            if (dummyFile.exists()) {
+                projectFiles = project.getProjectFiles()
+                dummyFileIndex = projectFiles.findIndexOf {
+                    it.filePath == sourceDir.toPath().relativize( dummyFile.toPath() ).toString() // relative path to dummy file
+                }
+                dummyEntry = projectFiles[dummyFileIndex].entries[0]
+                editor.gotoEntry(dummyEntry.entryNum())
+            }
+        } catch (Exception e) {
+            editor.gotoEntry(1)
+            dummyFileException = e
         }
+
         
         if (!continueScript) {
             return
@@ -117,13 +122,16 @@ def gui() {
 
 
         editor.gotoEntry(curEntry)
+        if ( dummyFileException != null ) { FlagDummyFileMissing(dummyFileException) }
         // org.omegat.gui.main.ProjectUICommands.projectReload()
         if (changesMade && eventType == LOAD) {
-            reloadProjectOnetime()
+            console.println("No need to reload?")
+            // reloadProjectOnetime()
             // org.omegat.gui.main.ProjectUICommands.projectReload();
         }   
     }
 }
+
 
 
 
@@ -144,8 +152,18 @@ def reloadProjectOnetime() {
     } as Runnable)
 }
 
+def FlagDummyFileMissing(e) {
 
-
+    // @todo: create a generic function for all message dialogs
+    
+    console.println("There was a problem: ${e}")
+    final def title = "Batch transition"
+    final def msg   = "File missing error (merge dialog might appear): \n\n${e}.\n\nPlease report this message to cApStAn support."
+    console.println("== ${title} ==")
+    console.println(msg)
+    showMessageDialog(null, msg, title, INFORMATION_MESSAGE)
+    // continueScript = false
+}
 
 
 return
