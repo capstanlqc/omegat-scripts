@@ -9,6 +9,8 @@
  * @edit      2023.11.22: Manuel removed reload (call to reloadProjectOnetime)
  * @edit      2023.11.22: Manuel added condition to discard translations in project if they are alternative
  * @edit      2023.11.23: Thomas added condition to discard TMX entries if they are alternative
+ * @edit      2023.12.15: Added /tm/auto/next as update tm folder (together with /tm/auto/prev)
+ * @edit      2023.12.15: Show dummy file missing error only if the project is not empty (it has batches)
  * @version   0.0.8
 */
 import org.omegat.core.data.PrepareTMXEntry
@@ -25,6 +27,8 @@ dummyFileException = null
 
 // path to the folder inside the TM folder
 path_to_tmx_dir = "auto" + File.separator + "prev"
+path_to_prev_tmx_dir = "auto" + File.separator + "prev"
+path_to_next_tmx_dir = "auto" + File.separator + "next"
 
 def gui() {
 
@@ -64,6 +68,8 @@ def gui() {
         dummyFileName = "zz.txt"
         sourceDirPath = props.getSourceRoot()
         sourceDir = new File(sourceDirPath)
+        def allFiles = new FileNameFinder().getFileNames(sourceDirPath, '**/*.xml **/*.html' /* includes */, '' /* excludes */)
+        numberOfFilesInProject = allFiles.size()
         def txtFiles = new FileNameFinder().getFileNames(sourceDirPath, '**/' + dummyFileName /* includes */, '**/*.xml **/*.html' /* excludes */)
         try {
             dummyFile = new File(txtFiles[0]) // .absolutePath
@@ -90,7 +96,7 @@ def gui() {
 
         project.transMemories.each { name, tmx -> 
             name = name.substring(props.getTMRoot().length())
-            if (name.startsWith(path_to_tmx_dir)) {
+            if (name.startsWith(path_to_prev_tmx_dir) || name.startsWith(path_to_next_tmx_dir)) {
                 // console.println("Importing from " + name)
                 tmx.entries.each { entry ->
                     // see if the entry is alternative (= if it has id)
@@ -128,7 +134,7 @@ def gui() {
         }
 
         editor.gotoEntry(curEntry)
-        if ( dummyFileException != null ) { FlagDummyFileMissing(dummyFileException) }
+        if ( dummyFileException != null && numberOfFilesInProject > 0) { FlagDummyFileMissing(dummyFileException) }
         // org.omegat.gui.main.ProjectUICommands.projectReload()
         if (changesMade && eventType == LOAD) {
             console.println("No need to reload?")
