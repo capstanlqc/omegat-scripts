@@ -28,7 +28,7 @@ if (eventType == LOAD) {
     props = project.projectProperties
     projName = props ? props.projectName : null
     
-    if ((!props) || !(projName =~ /(?i)^(pisa_2025|Eurobarometer_FLASH)/ )) {
+    if ((!props) || !(projName =~ /(?i)^(pisa_2025|Eurobarometer_FLASH|ysc_)/ )) {
         msg = "No project opened or not a PISA/FLASH project."
         console.println("== ${title} ==")
         console.println(msg)
