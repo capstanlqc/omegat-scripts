@@ -2,10 +2,11 @@
  * 
  * @author  Kos Ivantsov
  * @date    2024-03-25
- * @latest  2024-03-28
+ * @latest  2024-04-12
+ *          copy the wrongly named project with the required name instead of moving it
  * @version 1.0
  */
-
+import org.apache.commons.io.FileUtils
 import org.omegat.gui.main.ProjectUICommands
 import org.omegat.util.StaticUtils
 import static org.omegat.core.events.IProjectEventListener.PROJECT_CHANGE_TYPE.*
@@ -39,8 +40,13 @@ switch (eventType) {
                 }
                 if (rename) {
                     ProjectUICommands.projectClose()
+                    try {
+                        FileUtils.copyDirectory(new File(projectDir), newProjectDir)
+                        console.println "Successfully copied the project to ${newProjectName}"
+                    } catch (IOException e) {
+                        console.println "✘ Error copying project folder: ${e.message}"
+                    }
                     sleep 3000
-                    new File(projectDir).renameTo(newProjectDir)
                     ProjectUICommands.projectOpen(newProjectDir, true)
                 } else {
                     console.println("✘ Failed to rename the project")
