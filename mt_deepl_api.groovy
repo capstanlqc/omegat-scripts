@@ -6,12 +6,23 @@
  */
 
 // https://mvnrepository.com/artifact/com.deepl.api/deepl-java
+// https://github.com/DeepLcom/deepl-java
 @Grapes(
     @Grab(group='com.deepl.api', module='deepl-java', version='1.5.0')
 )
 
 import org.omegat.util.StaticUtils
+import org.omegat.util.OConsts
+import org.omegat.core.data.PrepareTMXEntry
+import org.omegat.core.data.TMXEntry
 import com.deepl.api.*;
+
+// constants
+
+def pretrans = true
+
+
+// functions
 
 def get_api_key() {
 
@@ -25,9 +36,59 @@ def get_api_key() {
     return api_key.trim()
 }
 
-String authKey = get_api_key()
-// console.println("authKey: '" + authKey + "'")
 
-translator = new Translator(authKey);
-TextResult result = translator.translateText("Hello, world!", null, "fr");
+def get_transl(segm_list, source_lang, target_lang, options) {
+    String api_key = get_api_key()
+    translator = new Translator(api_key);
+    List<TextResult> results = translator.translateText(segm_list, "en", "es", options = null);
+    return results.collect { it.getText() }
+}
+
+def set_options() {
+    new TextTranslationOptions().setFormality(Formality.More)
+}
+
+/* demo:
+TextResult result = translator.translateText("You are wrong.", "en", "es", $options = null);
 console.println(result.getText()); // "Bonjour, le monde !"
+*/
+
+def timestamp = new Date().format("YYYYMMddHHmm")
+def prop = project.projectProperties
+def project_root =  prop.projectRootDir
+def source_lang =   prop.getSourceLanguage()
+def target_lang =   prop.getTargetLanguage()
+def proj_name =     prop.projectName
+def tmdir_fs =      prop.getTMRoot() // fs = forward slash
+def mt_dpath =  pretrans ? prop.getTMRoot() + "auto" + File.separator + "mt" : prop.getTMRoot() + "mt"
+def omegat_dir =    prop.projectInternal // same as prop.getProjectInternal()
+
+// def project_save_fobj = new File(prop.projectInternal, OConsts.STATUS_EXTENSION)
+def tmxsave = prop.getProjectInternal() + OConsts.STATUS_EXTENSION
+def mt_fpath = mt_dpath + File.separator + "deepl_${timestamp}" + OConsts.TMX_EXTENSION;
+
+
+def segm_list = project.allEntries.collect { it.getSrcText() } // SourceTextEntry
+def options = null // set_options() // todo
+def translations = get_transl(segm_list, source_lang, target_lang, options)
+
+// backlog: remove entries with low QEst score
+
+project.allEntries.each { ste ->
+
+    def index = ste.entryNum()-1
+    def target = translations[index]
+
+    def entry = new PrepareTMXEntry()
+
+    entry.source = ste.getSrcText()
+    entry.translation = target
+            
+    project.setTranslation(ste, entry, true, TMXEntry.ExternalLinked.xAUTO)
+    // @review: not sure what is the third argument above and whether it should be true
+
+}
+project.ProjectTMX.save(prop, tmxsave, true)
+// @review: not sure what is the third argument above and whether it should be true
+
+return // to avoid printing the last variable in memory
