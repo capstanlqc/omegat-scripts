@@ -85,10 +85,15 @@ project.allEntries.each { ste ->
     entry.translation = target
             
     project.setTranslation(ste, entry, true, TMXEntry.ExternalLinked.xAUTO)
-    // @review: not sure what is the third argument above and whether it should be true
+    // 3rd parameter indicates whenever we save this entry as a default translation (true) or alternative (false)
+    // when true, the first parameter is not really used, if false we use its key to set alternative.
+    // Fourth parameter ExternalLinked.xAUTO is used when entries come from tm/autop (nothing to do with machine translation). 
+    // There is no equivalent to indicate entry coming from MT because OmegaT does not have a specific color for that.
 
 }
 project.ProjectTMX.save(prop, tmxsave, true)
-// @review: not sure what is the third argument above and whether it should be true
+// 3rd parameter: false is used by OmegaT when there were no modifications since last save. 
+// set to true, or if you want to use DeepL only for not yet translated segments, 
+// use true only if there was at least one segment translated.
 
 return // to avoid printing the last variable in memory
