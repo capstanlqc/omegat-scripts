@@ -61,6 +61,7 @@ def target_lang =   prop.getTargetLanguage()
 def proj_name =     prop.projectName
 def tmdir_fs =      prop.getTMRoot() // fs = forward slash
 def mt_dpath =  pretrans ? prop.getTMRoot() + "auto" + File.separator + "mt" : prop.getTMRoot() + "mt"
+new File(mt_dpath).mkdirs()
 def omegat_dir =    prop.projectInternal // same as prop.getProjectInternal()
 
 // def project_save_fobj = new File(prop.projectInternal, OConsts.STATUS_EXTENSION)
@@ -72,6 +73,8 @@ def segm_list = project.allEntries.collect { it.getSrcText() } // SourceTextEntr
 def options = null // set_options() // todo
 def translations = get_transl(segm_list, source_lang, target_lang, options)
 
+// backlog: remove entries that already have a translation in the working TM
+// backlog: remove entries that already have a 100% match in any ref TM
 // backlog: remove entries with low QEst score
 
 project.allEntries.each { ste ->
@@ -91,7 +94,7 @@ project.allEntries.each { ste ->
     // There is no equivalent to indicate entry coming from MT because OmegaT does not have a specific color for that.
 
 }
-project.ProjectTMX.save(prop, tmxsave, true)
+project.ProjectTMX.save(prop, mt_fpath, true)
 // 3rd parameter: false is used by OmegaT when there were no modifications since last save. 
 // set to true, or if you want to use DeepL only for not yet translated segments, 
 // use true only if there was at least one segment translated.
