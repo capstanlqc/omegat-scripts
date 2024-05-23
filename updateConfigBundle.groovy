@@ -836,8 +836,4 @@ if (success > 0) {
         message.alert()
     }
 }
-<<<<<<< HEAD
 return
-=======
-return
->>>>>>> 7eb0d5d (Two new scripts)
