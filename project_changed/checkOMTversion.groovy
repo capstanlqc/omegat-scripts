@@ -2,8 +2,9 @@
  * 
  * @author:  Kos Ivantsov
  * @date:    2024-02-12
- * @version: 0.2.1
+ * @version: 0.2.2
  * @changed: Manuel 2024-02-20 -- fixed matching regex, changed order of actions (close, then prompt)
+ * @changed: Manuel 2024-04.24 -- remove open project / project name and event type checks to run in any case
  */
 
 import java.awt.Desktop
@@ -14,7 +15,6 @@ import static org.omegat.core.events.IProjectEventListener.PROJECT_CHANGE_TYPE.*
 import static org.omegat.gui.main.ProjectUICommands.*
 import static org.omegat.util.Platform.*
 
-
 reqVersion = "5.7.2"
 reqRevision = "a978d82ee"
 winURL="https://cat.capstan.be/OmegaT/exe/OmegaT_${reqVersion}_Windows_64_Signed.exe"
@@ -24,25 +24,14 @@ if (eventType == LOAD) {
     title = "Check OmegaT version"
     openURL = false
     closeProject = false
-    
-    props = project.projectProperties
-    projName = props ? props.projectName : null
-    
-    if ((!props) || !(projName =~ /(?i)^(pisa_2025|Eurobarometer_FLASH|ysc_|EU-OSHA_ESENER-4_)/ )) {
-        msg = "No project opened or not a PISA/FLASH project."
-        console.println("== ${title} ==")
-        console.println(msg)
-        //showMessageDialog(null, msg, title, INFORMATION_MESSAGE)
-        return
-    }
-    
+
     if (OStrings.VERSION != reqVersion || OStrings.REVISION != reqRevision) {
         
         // close the project, first of all
         org.omegat.util.gui.UIThreadsUtil.executeInSwingThread { projectClose() }
 
         // inform the user 
-        msg="OmegaT 5.7.2 built by cApStAn is required for PISA or cApStAn projects."
+        msg="OmegaT 5.7.2 (built by cApStAn) is required.  "
         console.println("== ${title} ==")
         console.println(msg)
         showMessageDialog null, msg, title, INFORMATION_MESSAGE
