@@ -2,7 +2,7 @@
  *
  * @author      Manuel Souto Pico
  * @date        2024-06-05
- * @version     0.0.1
+ * @version     0.0.2
  */
 
 import org.omegat.util.StaticUtils
@@ -11,9 +11,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
 
+
 // define constants
 configDir = StaticUtils.getConfigDir()
 credsDir = new File(configDir + File.separator + "creds")
+if (!credsDir.exists()) { credsDir.mkdirs() }
 credsFile = new File(configDir + File.separator + "repositories.properties")
 
 // create timestamps
@@ -41,7 +43,7 @@ if (credsFile.exists()) {
 def credProjFiles = []
 credsDir.eachFile (FileType.FILES) { file ->
 	// check that proj suffix belongs to a validated list? ["pisa", "ysc", "etc"]
-	if (!file.endsWith(".done")) {
+	if (!file.getAbsolutePath().endsWith(".done")) {
 		credProjFiles << file
 	}
 }
@@ -59,4 +61,5 @@ credProjFiles.each{ file ->
 }
 
 // todo: dedupe lines? (duplicate lines seem harmless, though)
+return
 
