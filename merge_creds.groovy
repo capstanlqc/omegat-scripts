@@ -14,7 +14,7 @@ import java.util.TimeZone
 // define constants
 configDir = StaticUtils.getConfigDir()
 credsDir = new File(configDir + File.separator + "creds")
-credsFile = new File(configDir + File.separator + "creds" + File.separator + "repositories.properties")
+credsFile = new File(configDir + File.separator + "repositories.properties")
 
 // create timestamps
 def date = new Date()
