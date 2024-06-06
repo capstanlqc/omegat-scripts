@@ -100,10 +100,6 @@ def segm_list = project.allEntries.collect { it.getSrcText() } // SourceTextEntr
 def options = null // set_options() // todo
 def translations = get_transl(segm_list, source_lang, target_lang, options)
 
-// backlog: remove entries that already have a translation in the working TM
-// backlog: remove entries that already have a 100% match in any ref TM
-// backlog: remove entries with low QEst score
-
 project.allEntries.each { ste ->
 
     def index = ste.entryNum()-1
@@ -127,3 +123,11 @@ project.ProjectTMX.save(prop, mt_fpath, true)
 // use true only if there was at least one segment translated.
 
 return // to avoid printing the last variable in memory
+
+// @todo:
+
+// backlog: remove entries that already have a translation in the working TM
+// backlog: remove entries that already have a 100% match in any ref TM
+// backlog: remove entries with low QEst score
+// backlog: form of address
+// backlog: glossary
