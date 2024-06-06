@@ -1,8 +1,8 @@
 /* :name = MT -- Translate with DeepL API :description=foo
  * 
  * @author      Manuel Souto Pico
- * @date        2024-04-26
- * @version     0.0.2
+ * @date        2024-06-07
+ * @version     0.0.3
  */
 
 // https://mvnrepository.com/artifact/com.deepl.api/deepl-java
@@ -36,17 +36,40 @@ def get_api_key() {
     return api_key.trim()
 }
 
+
+def repair_langtags(tags, translator) {
+
+    /* check whether the full tag is supported, if not fetch only language subtag
+     * 
+     * tags is expected to be a map like this:
+     * ["source_lang": "aa-BB", "target_lang": "xx-YY"]
+    */
+    repaired_tags = [:]
+
+    deepl_source_languages = translator.getSourceLanguages().collect { it.getCode() }
+    deepl_target_languages = translator.getTargetLanguages().collect { it.getCode() }
+
+    repaired_tags["source_lang"] = (deepl_source_languages.contains(tags["source_lang"])) ? tags["source_lang"] : tags["source_lang"].split("-")[0]
+    repaired_tags["target_lang"] = (deepl_target_languages.contains(tags["target_lang"])) ? tags["target_lang"] : tags["target_lang"].split("-")[0]
+
+    return repaired_tags
+}
+
+
 def get_transl(segm_list, source_language, target_language, options) {
-
-    // check whether the full tag is supported, if not fetch only language subtag
-    source_lang = source_language.toString().split('-')[0]
-    target_lang = target_language.toString().split('-')[0]
-
+    
     String api_key = get_api_key()
     translator = new Translator(api_key);
-    List<TextResult> results = translator.translateText(segm_list, source_lang, target_lang, options = null);
+
+    tags = repair_langtags(
+        ["source_lang": source_language.toString(), "target_lang": target_language.toString()], 
+        translator
+        )
+
+    List<TextResult> results = translator.translateText(segm_list, tags["source_lang"], tags["target_lang"], options = null);
     return results.collect { it.getText() }
 }
+
 
 def set_options() {
     new TextTranslationOptions().setFormality(Formality.More)
