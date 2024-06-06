@@ -2,7 +2,7 @@
  * 
  * @author      Manuel Souto Pico
  * @date        2024-04-26
- * @version     0.0.1
+ * @version     0.0.2
  */
 
 // https://mvnrepository.com/artifact/com.deepl.api/deepl-java
@@ -36,11 +36,15 @@ def get_api_key() {
     return api_key.trim()
 }
 
+def get_transl(segm_list, source_language, target_language, options) {
 
-def get_transl(segm_list, source_lang, target_lang, options) {
+    // check whether the full tag is supported, if not fetch only language subtag
+    source_lang = source_language.toString().split('-')[0]
+    target_lang = target_language.toString().split('-')[0]
+
     String api_key = get_api_key()
     translator = new Translator(api_key);
-    List<TextResult> results = translator.translateText(segm_list, "en", "es", options = null);
+    List<TextResult> results = translator.translateText(segm_list, source_lang, target_lang, options = null);
     return results.collect { it.getText() }
 }
 
