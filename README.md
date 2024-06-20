@@ -10,6 +10,7 @@ Groovy scripts that can run in OmegaT
 ## `utils_import_creds.groovy`
 <details>
   This scripts adds credentials data from a plain text file to `credential.properties` in OmegaT config folder. The user selects the file via a file chooser dialog. Once the selected file is imported, its extension changes to `.done` and such processed file cannot be used again.
-  The script also checks if the selected file is a binary file, and if it actually contains the expected credentials data. In case a wrong file is selected, the file chooser dialog appears again.
+  
+  The script also checks if the selected file is a binary file, and if it actually contains the expected credentials data. In case a wrong file is selected, the file chooser dialog appears again.  
   To simplify the check for the above conditions, selecting only one file at a time is possible.
 </details>
