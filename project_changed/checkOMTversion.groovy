@@ -5,6 +5,7 @@
  * @version: 0.2.2
  * @changed: Manuel 2024-02-20 -- fixed matching regex, changed order of actions (close, then prompt)
  * @changed: Manuel 2024-04.24 -- remove open project / project name and event type checks to run in any case
+ * @changed: Manuel 2024-06-27 -- add a list of allowed versions (rather than unique version)
  */
 
 import java.awt.Desktop
@@ -17,6 +18,7 @@ import static org.omegat.util.Platform.*
 
 reqVersion = "5.7.2"
 reqRevision = "a978d82ee"
+allowedVersions = ["a978d82ee", "4e7e1433e"]
 winURL="https://cat.capstan.be/OmegaT/exe/OmegaT_${reqVersion}_Windows_64_Signed.exe"
 macURL="https://cat.capstan.be/OmegaT/exe/OmegaT_${reqVersion}_Mac.zip"
 
@@ -25,7 +27,7 @@ if (eventType == LOAD) {
     openURL = false
     closeProject = false
 
-    if (OStrings.VERSION != reqVersion || OStrings.REVISION != reqRevision) {
+    if (allowedVersions.contains(OStrings.VERSION)) {
         
         // close the project, first of all
         org.omegat.util.gui.UIThreadsUtil.executeInSwingThread { projectClose() }
