@@ -17,8 +17,8 @@ import static org.omegat.gui.main.ProjectUICommands.*
 import static org.omegat.util.Platform.*
 
 reqVersion = "5.7.2"
-reqRevision = "a978d82ee"
-allowedVersions = ["a978d82ee", "4e7e1433e"]
+// reqRevision = "a978d82ee"
+allowedRevisions = ["a978d82ee", "4e7e1x433e"]
 winURL="https://cat.capstan.be/OmegaT/exe/OmegaT_${reqVersion}_Windows_64_Signed.exe"
 macURL="https://cat.capstan.be/OmegaT/exe/OmegaT_${reqVersion}_Mac.zip"
 
@@ -27,7 +27,7 @@ if (eventType == LOAD) {
     openURL = false
     closeProject = false
 
-    if (allowedVersions.contains(OStrings.VERSION)) {
+    if (!(allowedRevisions.contains(OStrings.REVISION))) {
         
         // close the project, first of all
         org.omegat.util.gui.UIThreadsUtil.executeInSwingThread { projectClose() }
