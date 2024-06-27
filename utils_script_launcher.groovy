@@ -13,8 +13,6 @@ def executeScript(String scriptPath) {
     scriptFile = new File(scriptPath)
     if (scriptFile.exists()) {
         evaluate(scriptFile)
-    } else {
-        console.println("Script file not found: ${scriptPath}")
     }
 }
 
@@ -29,6 +27,8 @@ if (! scriptPathsFile.exists()) {
 	    scriptToRun = scriptFolder.toString() + File.separator + line
 	    if (new File(scriptToRun).exists()) {
 	        executeScript(scriptToRun)
+	    } else {
+        	console.println("Script file not found: ${scriptToRun}")
 	    }
 	}
 }
