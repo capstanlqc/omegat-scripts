@@ -17,5 +17,5 @@ Groovy scripts that can run in OmegaT
 
 ## `goto_next_filtered_note.groovy` and `goto_prev_filtered_note.groovy`
 <details>
-  The scripts will activate the next/previous segment where the note contains the text either defined in the file <code>&lt;project_folder&gt;/filtered_note.txt</code>, or, if the file is not found, in the scripts themselves (currently <code>XYZZZ</code>)
+  The scripts will activate the next/previous segment where the note contains the text either defined in the file <code>&lt;project_folder&gt;/filtered_note.txt</code>, or, if the file is not found, in the scripts themselves (currently <code>XYZZZ</code>).
 </details>
