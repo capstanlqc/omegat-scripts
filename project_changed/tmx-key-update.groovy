@@ -30,24 +30,24 @@ if (container.contains("pisa")) {
 String dir
 def replacePair
 
-/*def skipTraverse(eventType) {
+def skipTraverse(eventType) {
     if (!eventType.metaClass.hasProperty(eventType, 'skipTraverse')) {
         eventType.metaClass.skipTraverse = false
     }
     eventType.skipTraverse
-}*/
+}
 
 switch (eventType) {
     case LOAD:
         // Skip traverse
-/*        if (skipTraverse(LOAD)) {
+        if (skipTraverse(LOAD)) {
 			LOAD.skipTraverse = false // reset the flag
 			return
-        }*/
+        }
 
         dir = project.projectProperties.TMRoot
         replacePair = [
-            [find: /(?<=<prop type="id">)foo(?=<\/prop>)/, replacement: /bar/],
+            [find: /(?<=<prop type="id">)foo(?=_0<\/prop>)/, replacement: /bar/],
         ]
 		break
 	case COMPILE:
@@ -80,18 +80,18 @@ def replacer = {file ->
     }
 }
 
-/*def reloadProjectOnetime = {
+def reloadProjectOnetime = {
     LOAD.skipTraverse = true    // avoid potentially infinity reloading loop
     javax.swing.SwingUtilities.invokeLater({
         org.omegat.gui.main.ProjectUICommands.projectReload()
     } as Runnable)
 }
-*/
+
 // do replace
 rootDir.traverse options, replacer
 
-/*if (modifiedFiles > 0 && eventType == LOAD) {
+if (modifiedFiles > 0 && eventType == LOAD) {
     console.println "$modifiedFiles file(s) modified."
     reloadProjectOnetime()
 }
-*/
+
