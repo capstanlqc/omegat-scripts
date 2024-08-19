@@ -1,5 +1,8 @@
 /*:name = GoTo - Filtered T&A note / next :description = Jumps to the next segment which has a T&A note
- * 
+ *
+ *  @author:   Kos Ivantsov
+ *  @date:     2024-08-19
+ *  @version:  0.1
  */
 
 import org.omegat.core.data.SourceTextEntry
