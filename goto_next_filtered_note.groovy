@@ -1,48 +1,46 @@
 /*:name = GoTo - Filtered note / next :description=Jump to next segment with a note matching the filter
- *  
+ *
  *  @author:   Kos Ivantsov
- *  @date:     2024-08-02
- *  @version:  0.1         
+ *  @date:     2024-08-19
+ *  @version:  0.2
  */
 
- 
 import static javax.swing.JOptionPane.*
 import static org.omegat.util.Platform.*
 
 prop = project.projectProperties
 filtered_note = new File(prop.getProjectRoot() + "filtered_note.txt")
-if (! filtered_note.exists()) {
-    filter = "XYZZZ"
+if (!filtered_note.exists()) {
+    regex = 'XYZZZ'
 } else {
-    filter = filtered_note.text
+    regex = filtered_note.text.trim()
 }
-console.println filter
 exit = false
 if (!prop) {
-  final def title = 'Next alternative'
-  final def msg   = 'Please try again after you open a project.'
-  showMessageDialog null, msg, title, INFORMATION_MESSAGE
-  exit = true
-  return
+    final def title = 'Next filtered note'
+    final def msg = 'Please try again after you open a project.'
+    showMessageDialog null, msg, title, INFORMATION_MESSAGE
+    exit = true
+    return
 }
 
 lastSegmentNumber = project.allEntries.size()
 jump = false
 def gui() {
     if (exit)
-    return
+        return
     ste = editor.getCurrentEntry()
     currentSegmentNumber = startingSegmentNumber = ste.entryNum()
-    //jump = false
     while (!jump) {
         nextSegmentNumber = currentSegmentNumber == lastSegmentNumber ? 1 : currentSegmentNumber + 1
-        stn = project.allEntries[nextSegmentNumber -1]
+        stn = project.allEntries[nextSegmentNumber - 1]
         info = project.getTranslationInfo(stn)
-        note = info.note
+        note = info.note ? info.note.toString() : ""
         if (nextSegmentNumber == startingSegmentNumber) {
             return
         }
-        if (note =~ filter) {
+        found_note =  note.find(regex)
+        if (found_note)  {
             jump = true
             editor.gotoEntry(nextSegmentNumber)
             return
