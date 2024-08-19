@@ -39,7 +39,7 @@ def gui() {
         if (nextSegmentNumber == startingSegmentNumber) {
             return
         }
-        found_note =  note.find(regex)
+        found_note = note.find(regex)
         if (found_note)  {
             jump = true
             editor.gotoEntry(nextSegmentNumber)
