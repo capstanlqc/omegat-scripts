@@ -103,7 +103,6 @@ def gui() {
             return
         }
         filtered_comment = comment.find(regex)
-        //console.println(comment)
         if (filtered_comment) {
             jump = true
             console.println(comment)
