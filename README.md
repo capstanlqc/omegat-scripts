@@ -19,3 +19,8 @@ Groovy scripts that can run in OmegaT
 <details>
   The scripts will activate the next/previous segment where the note contains text either defined in the file <code>&lt;project_folder&gt;/filtered_note.txt</code>, or, if the file is not found, in the scripts themselves (currently <code>XYZZZ</code>).
 </details>
+
+## `goto_next_ta_note.groovy`
+<details>
+  The script will activate the next segment which has a match in the first TMX file found in <code>&lt;project_folder&gt;/notes</code>. Works even without the plugin that shows T&A notes.
+</details>
