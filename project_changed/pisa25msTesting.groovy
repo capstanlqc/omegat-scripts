@@ -3,9 +3,14 @@
  * Logic : Renames target files replacing the real target language tag with the fictitious tag in the repo name.
  *
  * @authors 	Manuel Souto Pico
- * @version 	0.1.0
+ * @version 	0.2.0
  * @date 		2024.07.09
  */
+
+/*
+ changes:
+ 0.2.0 (2024.07.09)	delete file if it exists before renaming
+*/
 
 import static org.omegat.core.events.IProjectEventListener.PROJECT_CHANGE_TYPE.*
 import org.omegat.util.FileUtil;
@@ -34,13 +39,6 @@ List<String> targetFiles = FileUtil.buildRelativeFilesList(targetDir, null, ['zz
 // prepare
 String dir
 def replacePair
-
-def skipTraverse(eventType) {
-    if (!eventType.metaClass.hasProperty(eventType, 'skipTraverse')) {
-        eventType.metaClass.skipTraverse = false
-    }
-    eventType.skipTraverse
-}
 
 switch (eventType) {
 	case COMPILE:
@@ -91,7 +89,11 @@ def replacer = {file ->
 
     if (file != fixedFilePath) {
     	console.println("Rename ${file.getName()} as ${fixedFilename}")
-    	// fixedFile = new File(fixedFilePath.toString())
+    	fixedFile = new File(fixedFilePath.toString())
+    	if (fixedFile.exists()) {
+    		// console.println("########### FILE ${fixedFile} EXISTS, WILL BE DELETED ###########")
+    		fixedFile.delete()
+    	}
     	file.renameTo(fixedFilePath)
     	modifiedFiles++
     } 
