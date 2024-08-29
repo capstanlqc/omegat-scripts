@@ -2,8 +2,8 @@
  *
  * @author      Manuel Souto Pico, Kos Ivantsov
  * @date        2024-06-20
- * @update      2024-08-24 [overwrite lines if the imported file contains creds for repos already existing in 'repositories.properties']
- * @version     0.1
+ * @update      2024-08-29 [overwrite lines if the imported file contains creds for repos already existing in 'repositories.properties']
+ * @version     0.2
  */
 
 import java.text.SimpleDateFormat
@@ -124,17 +124,21 @@ selectedFileLines.removeIf { line ->
     line.trim().startsWith("#")
 }
 
-// Collect URLs in the selected file; lines with these URLs will be deleted from the credentials array before merging
+// Collect URLs in the selected file; lines with these URLs will be deleted from the credentials lines before merging
 linesToRemove = selectedFileLines.collect { normalizeLine(it) }
-// Remove collected URLs in the existing credentials array
-credsFileLines = credsFileLines.findAll { line ->
+
+// Create a new array where the lines with the collected URLs are deleted
+credsLinesToKeep = []
+credsFileLines.each { line ->
     normalizedLine = normalizeLine(line)
-    !linesToRemove.contains(normalizedLine)
+    if (!linesToRemove.contains(normalizedLine)) {
+        credsLinesToKeep.add(line)
+    }
 }
 
 // Combine contents of OmegaT creds file and the selected file, dedupe and write
 credsContents = new StringWriter()
-credsContents << credsFileLines.join("\n")
+credsContents << credsLinesToKeep.join("\n")
 credsContents << "\n${selectedFileLines.join("\n")}"
 // Convert to an array again to dedupe
 finalContents = credsContents.toString().tokenize("\n")
