@@ -48,7 +48,7 @@ def normalizeLine(line) {
     line = line
         .replaceAll(/!password=.*/, /!password=/)
         .replaceAll(/!username=.*/, /!username=/)
-    return line
+    return line.trim()
 }
 
 // Select a creds file to import
@@ -137,13 +137,10 @@ credsFileLines.each { line ->
 }
 
 // Combine contents of OmegaT creds file and the selected file, dedupe and write
+mergedCreds = (credsLinesToKeep + selectedFileLines).unique()
 credsContents = new StringWriter()
-credsContents << credsLinesToKeep.join("\n")
-credsContents << "\n${selectedFileLines.join("\n")}"
-// Convert to an array again to dedupe
-finalContents = credsContents.toString().tokenize("\n")
-// Dedupe and write
-credsFile.text = finalContents.unique().join("\n").toString()
+credsContents << mergedCreds.join("\n")
+credsFile.text = credsContents.toString()
 
 // Mark selected file as done
 doneFilePath = selectedFile.getAbsolutePath() + ".done"
