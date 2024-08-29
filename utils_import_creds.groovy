@@ -3,7 +3,7 @@
  * @author      Manuel Souto Pico, Kos Ivantsov
  * @date        2024-06-20
  * @update      2024-08-29 [overwrite lines if the imported file contains creds for repos already existing in 'repositories.properties']
- * @version     0.2
+ * @version     0.3
  */
 
 import java.text.SimpleDateFormat
