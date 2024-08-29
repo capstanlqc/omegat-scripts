@@ -85,11 +85,12 @@ if (tasksDir.exists() && tasksDir.isDirectory()) {
             def destFile = new File(mineTmxDir, file.name) // Create a File object for the destination file
 
             // Copy the file
-            file.withInputStream { input ->
-                destFile.withOutputStream { output ->
-                    output << input
-                }
-            }
+            Files.copy(Paths.get(file.toString()), Paths.get(destFile.toString()), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+//            file.withInputStream { input ->
+//                destFile.withOutputStream { output ->
+//                    output << input
+//                }
+//            }
             console.println("Copied ${file.name} to ${mineTmxDir}")
         }
     }
