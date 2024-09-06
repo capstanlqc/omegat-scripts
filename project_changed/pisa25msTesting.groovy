@@ -87,7 +87,7 @@ def replacer = {file ->
     replacePair.each {fixedFilename = fixedFilename.replace it.find, it.replacement[component]}
     fixedFilePath = parentDirPath + File.separator + fixedFilename
 
-    if (file != fixedFilePath) {
+    if (file.toString() != fixedFilePath.toString()) {
     	console.println("Rename ${file.getName()} as ${fixedFilename}")
     	fixedFile = new File(fixedFilePath.toString())
     	if (fixedFile.exists()) {
