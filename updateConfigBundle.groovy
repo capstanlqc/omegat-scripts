@@ -334,7 +334,16 @@ upgradePlugins = { File tmpDir, File installDir ->
     })
 
     // Recursively delete temporary directory
-    FileUtils.deleteDirectory(tmpDir)
+    try {
+        if (tmpDir.exists()) { FileUtils.deleteDirectory(tmpDir) }
+    } catch (Exception e) {
+        console.println(">>>> Raise exception1 ${e.message}")
+    }
+    try {
+        delDir(tmpDir)
+    } catch (Exception e) {
+        console.println(">>>> Raise exception2 ${e.message}")
+    }
 }
 
 printSep = {
