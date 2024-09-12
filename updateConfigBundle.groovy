@@ -247,7 +247,7 @@ downloadZip = {
 
 unzipFile = {
     File file, dir ->
-    if (! dir.exists()) {
+    if (dir.exists()) {
         dir.deleteDir()
     }
     def zipFile = new ZipFile(file)
