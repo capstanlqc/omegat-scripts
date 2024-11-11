@@ -30,4 +30,6 @@ Below you'll find short info on some of the scripts.
 ## Event: `entry_activated`
 These scripts need to be placed into `<scripts>/entry_activated/` where `<scripts>` is the folder where OmegaT expects to find scripts.
 * **[`entry_activated/caret_target_end.groovy`](entry_activated/caret_target_end.groovy)**
-  <details>With this script, text caret is placed at the end of the target text automatically as soon as a new segment is activated. Caret jumps back at the end on save.</details>
+  <details>
+    With this script, text caret is placed at the end of the target text automatically as soon as a new segment is activated. Caret jumps back at the end on save.
+  </details>
