@@ -1,4 +1,4 @@
- /*:name = Indicate alternative translation :description = A short flash in the activated segment with alt translation
+/*:name = Indicate alternative translation :description = A short flash in the activated segment with alt translation
  *
  *  @author:   Kos Ivantsov (with parts borrowed from Yu Tang)
  *  @date:     2024-11-11
@@ -91,30 +91,26 @@ Rectangle getSourceSegmentRect() {
     // Get the segment builder for the active segment
     def sb = editor.m_docSegList[activeSegment]
 
-    // Get positions for the start of the source segment and the translation segment
+    // Get the starting position of the source segment
     int startSourcePosition = sb.startSourcePosition
-    int startTranslationPosition = sb.startTranslationPosition
-    if (startTranslationPosition == -1) {
-        startTranslationPosition = startSourcePosition + sb.sourceText.size() + 1  // Add 1 for the line break
-    }
-
-    // Get the on-screen location of the source text
     Point sourceLocation = editor.editor.modelToView(startSourcePosition).location
-    Point transLocation = editor.editor.modelToView(startTranslationPosition).location
 
     // Ensure the source location is within the viewable area
     if (!viewRect.contains(sourceLocation)) {  
         throw new RuntimeException("Source segment must be viewable")
     }
 
-    // Calculate the rectangle based on source and translation positions
+    // Calculate the height of a single line
+    FontMetrics fm = editor.editor.getFontMetrics(editor.editor.font)
+    int lineHeight = fm.getHeight()
+
+    // Calculate the rectangle based on source position and line height
     int x = (int) viewRect.x
     int y = (int) sourceLocation.y
     int width = (int) viewRect.width
-    int height = (int) (transLocation.y - y)
-//    int vgap = (int) width / 2
+    int height = lineHeight
     Point point = new Point(x, y)
-    SwingUtilities.convertPointToScreen(point, viewport.view)
+    SwingUtilities.convertPointToScreen(point, viewport.view)  // Convert to screen coordinates
 
-    return new Rectangle((int) point.x, (int) point.y, width, height)
+    return new Rectangle((int) point.x, (int) point.y - height, width, height)  // Convert x and y to int
 }
