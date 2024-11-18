@@ -14,6 +14,22 @@ Below you'll find short info on some of the scripts.
     The script will activate the next segment which has a match in the first TMX file found in <code>&lt;project_folder&gt;/notes</code>. Works even without the plugin that shows T&A notes.
   </details>
 
+* **[`utils_alt_with_corrected_table.groovy`](utils_alt_with_corrected_table.groovy)**
+  <details>
+    This script can create a TMX with alternative translations for segments defined in a table/spreadsheet.  
+    The script expects a spreadsheet called `correct` (possible extensions: `tsv`, `xls`, `xlsx`) in the project directory.
+    The spreadsheet should contain three columns:
+     
+    | Segment ID | OmegaT Source Text | Correct Target Text |
+    |------------|--------------------|---------------------|
+
+    Column headers should not be there. Other columns will be ignored. The script outputs one or two files into `<project>/script_output`:
+    
+    1. `<project>_alt.tmx` with alternative translations for the IDs found both in the OmegaT project and in the correct file if the source text is identical in both
+
+    2. `<project>_errors.tsv` listing records in the correct file where the source text is different; and records in the correct file with IDs not found in the OmegaT project.
+  </details>
+
 * **[`utils_import_creds.groovy`](utils_import_creds.groovy)**
   <details>
     This scripts adds credentials data from a plain text file to <code>credential.properties</code> in OmegaT config folder. The user selects the file via a file chooser dialog. Once the selected file is imported, its extension changes to <code>.done</code> and such processed file cannot be used again.
