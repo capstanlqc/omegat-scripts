@@ -1,3 +1,4 @@
+
 /*:name = Utils - Create TMX with alternative translations from table :description = 
  * 
  *  @author:  Kos Ivantsov
@@ -51,7 +52,7 @@ import java.nio.file.Paths
 
 // Function to read Excel file
 def readExcelFile(String filePath) {
-    FileInputStream file = new FileInputStream(new File(filePath))
+    FileInputStream file = new FileInputStream(new File(filePath.toString()))
     Workbook workbook = null
     
     // Determine if the file is xls or xlsx
@@ -129,11 +130,27 @@ if (prop.isSentenceSegmentingEnabled()) {
 
 // Find the file with correct target versions and determine how it should be treated
 correctBaseName = "correct"
-possibleExtensions = ["txt", "tsv", "csv", "xlx", "xlsx"]
+possibleExtensions = ["txt", "tsv", "csv", "xls", "xlsx"]
+correctFilePath = correctWithAnyExtension(correctBaseName, projectRoot, possibleExtensions)
+
+if (correctFilePath == null) {
+    console.println("${scriptName}\n${"="*scriptName.size()}\nRequired file not found!")
+    return
+}
+
+correctFile = new File(correctFilePath)
+correctExtension = getFileExtension(correctFile.toString())
+
+if (correctExtension.equalsIgnoreCase("tsv") || correctExtension.equalsIgnoreCase("csv")) {
+    correctData = readTSVFile(correctFile.toString())
+} else if (correctExtension.equalsIgnoreCase("xls") || correctExtension.equalsIgnoreCase("xlsx")) {
+    correctData = readExcelFile(correctFile.toString())
+}
+
 def correctWithAnyExtension(correctBaseName, projectRoot, possibleExtensions) {
     def foundCorrectFile = possibleExtensions.findResult { extension -> 
         filePath = "${projectRoot}${correctBaseName}.${extension.toLowerCase()}"
-        if (new File(filePath).exists()) {
+        if (new File(filePath.toString()).exists()) {
             return filePath
         }
     }
