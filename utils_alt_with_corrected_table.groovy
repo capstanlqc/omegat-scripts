@@ -3,7 +3,8 @@
  * 
  *  @author:  Kos Ivantsov
  *  @date:    19-06-2024
- *  @version: 0.0.1
+ *  @update:  19-11-2024
+ *  @version: 0.0.2
  *  
  *  @Usage:   The script expects a spreadsheet called 'correct' (possible extensions: tsv, xls, xlsx) in the project directory.
  *            The spreadsheet should contain:
