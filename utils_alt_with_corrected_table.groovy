@@ -2,8 +2,8 @@
 /*:name = Utils - Create TMX with alternative translations from table :description = 
  * 
  *  @author:  Kos Ivantsov
- *  @date:    19-06-2024
- *  @update:  19-11-2024
+ *  @date:    2024.06.19
+ *  @update:  2024.11.19
  *  @version: 0.0.2
  *  
  *  @Usage:   The script expects a spreadsheet called 'correct' (possible extensions: tsv, xls, xlsx) in the project directory.
