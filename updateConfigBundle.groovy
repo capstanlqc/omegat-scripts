@@ -1,11 +1,11 @@
-/* :name = Update Customisation Bundle (v572) :description =
+/* :name = Update Customisation Bundle :description =
  *  Update OmegaT customisation from a remote repository
  *
  * @author:  Kos Ivantsov
  * @date:    2020-09-27
  * @review:  Lev Abashkin
  * @review:  Manuel Souto Pico
- * @version: 0.5.5
+ * @version: 0.5.6
  * @latest:  2024-04-06
  *
  */
@@ -25,6 +25,7 @@
  *          0.5.3: Delete folder accidentally created with version 0.5.1 when trying to write jar file
  *          0.5.4: Update autotext merging logic
  *          0.5.5: Added hack to run the full customization each time (only to be in the version that does not autoLaunch)
+ *          0.5.6: Fixed encoding issue in Windows 11
  *
  */
 
@@ -247,7 +248,7 @@ downloadZip = {
 
 unzipFile = {
     File file, dir ->
-    if (dir.exists()) {
+    if (! dir.exists()) {
         dir.deleteDir()
     }
     def zipFile = new ZipFile(file)
@@ -334,16 +335,7 @@ upgradePlugins = { File tmpDir, File installDir ->
     })
 
     // Recursively delete temporary directory
-    try {
-        if (tmpDir.exists()) { FileUtils.deleteDirectory(tmpDir) }
-    } catch (Exception e) {
-        console.println(">>>> Raise exception1 ${e.message}")
-    }
-    try {
-        delDir(tmpDir)
-    } catch (Exception e) {
-        console.println(">>>> Raise exception2 ${e.message}")
-    }
+    FileUtils.deleteDirectory(tmpDir)
 }
 
 printSep = {
