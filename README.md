@@ -43,6 +43,11 @@ Below you'll find short info on some of the scripts.
     Reports how many segments are populated from <code>tm/auto</code> and <code>tm/enforce</code>. Data is output to the console, can be automatically copied as tab separated values to the clipboard, and exported to a tsv file inside the current project. 
   </details>
 
+* **[`write_source_target.groovy`](write_source_target.groovy)**
+  <details>
+    When run, the script exports the whole project as <code>script_output/source_target.txt</code> inside the current project's root folder
+  </details>
+
 ## Event: `entry_activated`
 
 These scripts need to be placed into `<scripts>/entry_activated/` where `<scripts>` is the folder where OmegaT expects to find scripts.
