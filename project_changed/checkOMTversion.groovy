@@ -6,7 +6,7 @@
  * @changed: Manuel 2024-02-20 -- fixed matching regex, changed order of actions (close, then prompt)
  * @changed: Manuel 2024-04.24 -- remove open project / project name and event type checks to run in any case
  * @changed: Manuel 2024-06-27 -- add a list of allowed revisions (rather than unique version)
- * @changed: Kos    2025-01014 -- close the project only after the user has been informed
+ * @changed: Kos    2025-01-14 -- close the project only after the user has been informed
  */
 
 import java.awt.Desktop
