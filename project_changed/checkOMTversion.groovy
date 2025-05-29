@@ -2,12 +2,13 @@
  * 
  * @author:  Kos Ivantsov
  * @date:    2024-02-12
- * @version: 0.2.4
+ * @version: 0.2.5
  * @changed: Manuel 2024-02-20 -- fixed matching regex, changed order of actions (close, then prompt)
  * @changed: Manuel 2024-04.24 -- remove open project / project name and event type checks to run in any case
  * @changed: Manuel 2024-06-27 -- add a list of allowed revisions (rather than unique version)
  * @changed: Kos    2025-01-14 -- close the project only after the user has been informed
  * @changed: Kos    2025-02-12 -- place the information message in the center of the active screen
+ * @changed: Kos    2025-05-29 -- disable running on non-cApStAn builds of OmegaT
  */
 
 import java.awt.Desktop
@@ -19,11 +20,19 @@ import java.awt.Window
 import javax.swing.FocusManager
 import javax.swing.JFrame
 import org.omegat.util.OStrings
+import org.omegat.util.Preferences
 
 import static javax.swing.JOptionPane.*
 import static org.omegat.core.events.IProjectEventListener.PROJECT_CHANGE_TYPE.*
 import static org.omegat.gui.main.ProjectUICommands.*
 import static org.omegat.util.Platform.*
+
+omtVendor = Preferences.getPreference("omegat_vendor")
+if ((!omtVendor) || (omtVendor != "cApStAn")) {
+    message = "cApStAn customization cannot be installed for this version of OmegaT"
+    console.print(message)
+    return
+}
 
 reqVersion = "5.7.3"
 // 57b1bb571 was used for Windows 5.7.3, e363cb094 was used for Mac 5.7.3
