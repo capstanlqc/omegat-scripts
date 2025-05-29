@@ -5,8 +5,8 @@
  * @date:    2020-09-27
  * @review:  Lev Abashkin
  * @review:  Manuel Souto Pico
- * @version: 0.5.6
- * @latest:  2024-04-06
+ * @version: 0.5.7
+ * @latest:  2025-05-29
  *
  */
 
@@ -26,6 +26,7 @@
  *          0.5.4: Update autotext merging logic
  *          0.5.5: Added hack to run the full customization each time (only to be in the version that does not autoLaunch)
  *          0.5.6: Fixed encoding issue in Windows 11
+ *          0.5.7: Disable running on non-cApStAn builds of OmegaT
  *
  */
 
