@@ -72,6 +72,15 @@ String.metaClass.alert = { ->
     showMessageDialog null, delegate, title, INFORMATION_MESSAGE
 }
 
+omtVendor = Preferences.getPreference("omegat_vendor")
+if ((!omtVendor) || (omtVendor != "cApStAn")) {
+    message = "cApStAn customization cannot be installed for this version of OmegaT"
+    title = "Customisation Update"
+    console.print(message)
+    message.alert()
+    return
+}
+
 def projectAlert
 if (autoLaunch) {
     runChunks = System.getProperty("sun.java.command").split(/\s+/)
