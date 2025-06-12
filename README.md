@@ -43,6 +43,11 @@ Below you'll find short info on some of the scripts.
     Reports how many segments are populated from <code>tm/auto</code> and <code>tm/enforce</code>. Data is output to the console, can be automatically copied as tab separated values to the clipboard, and exported to a tsv file inside the current project. 
   </details>
 
+* **[`utils_plunet_statsCSV.groovy`](utils_plunet_statsCSV.groovy)**
+  <details>
+    This script runs match statistics for the project and reports it in a CSV file named <code>Statistics_&lt;project_name&gt;_&lt;locale_code&gt;.csv</code> inside the <code>omegat</code> folder of the current project. The CSV file can be imported in Plunet.
+  </details>
+
 * **[`write_source_target.groovy`](write_source_target.groovy)**
   <details>
     When run, the script exports the whole project as <code>script_output/source_target.txt</code> inside the current project's root folder
