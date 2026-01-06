@@ -1,4 +1,4 @@
-/* :name=QA Checks (Updated) :description=QA script
+/* :name=QA Checks (CSV output) :description=QA script with GUI and CSV output
  * 
  * @author  Briac Pilpre
  * @author  Piotr Kulik
